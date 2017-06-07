@@ -81,7 +81,7 @@ module WashOut
     end
 
     # Render a SOAP response.
-    def _render_soap(result, options)
+    def _render_soap(result, options, result_with_action_spec_out = true)
       @namespace   = soap_config.namespace
       @operation   = soap_action = request.env['wash_out.soap_action']
       @action_spec = self.class.soap_actions[soap_action]
@@ -137,12 +137,12 @@ module WashOut
         header = HashWithIndifferentAccess.new(header)
       end
 
-      render :template => "wash_out/#{soap_config.wsdl_style}/response",
+      render :template => "wash_out/#{soap_config.wsdl_style}/#{result_with_action_spec_out ? 'response' : 'herbdoc_response'}",
              :layout => false,
              :locals => {
                :header => header.present? ? inject.call(header, @action_spec[:header_out])
                                       : nil,
-               :result => inject.call(result, @action_spec[:out])
+               :result => result_with_action_spec_out ? inject.call(result, @action_spec[:out]) : result,
              },
              :content_type => 'text/xml'
     end

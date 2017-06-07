@@ -44,6 +44,10 @@ ActionController::Renderers.add :soap do |what, options|
   _render_soap(what, options)
 end
 
+ActionController::Renderers.add :herbdoc_soap do |what, options|
+  _render_soap(what, options, false)
+end
+
 ActionController::Metal.class_eval do
 
   # Define a SOAP service. The function has no required +options+:
